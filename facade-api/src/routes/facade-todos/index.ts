@@ -1,6 +1,8 @@
 import axios from "axios";
 import { FastifyPluginAsync } from "fastify";
-import { retryWithBreaker } from "../../policies";
+// import { CircuitState } from "cockatiel";
+
+import { circuitBreaker, retryWithBreaker } from "../../policies";
 
 const getAllTodoFacade: FastifyPluginAsync = async (
   fastify,
@@ -20,6 +22,14 @@ const getAllTodoFacade: FastifyPluginAsync = async (
       },
     },
     async function (request: any, reply) {
+      console.log(
+        `--> Circuit breaker state is ${
+          circuitBreaker.state
+            ? "open. Not accepting request."
+            : "close. Accepting request."
+        }`
+      );
+
       const { data } = await retryWithBreaker.execute(async (context: any) => {
         console.log(`--> Retry Attempt ${context.attempt}`);
         return await axios.get(
