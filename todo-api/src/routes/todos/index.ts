@@ -18,10 +18,10 @@ const getTodos: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       const randomNumber = Math.floor(Math.random() * 100) + 1;
       if (randomNumber >= request.params.id) {
         console.log("--> TodoService Returned 500 ERROR");
-        reply.serviceUnavailable();
+        return reply.serviceUnavailable();
       }
       console.log("--> TodoService Returned 200 OK");
-      reply.code(204).send();
+      return reply.code(204).send();
     }
   );
 };
