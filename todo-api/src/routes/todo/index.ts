@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 
-const getTodos: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
+const getTodoById: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.get(
     "/:id",
     {
@@ -15,15 +15,16 @@ const getTodos: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
     },
     async function (request: any, reply) {
+      const id = request.params.id
       const randomNumber = Math.floor(Math.random() * 100) + 1;
-      if (randomNumber >= request.params.id) {
+      if (randomNumber >= id) {
         console.log("--> TodoService Returned 500 ERROR");
         return reply.serviceUnavailable();
       }
       console.log("--> TodoService Returned 200 OK");
-      return reply.code(204).send();
+      return reply.send({id, activity:"eat"});
     }
   );
 };
 
-export default getTodos;
+export default getTodoById;

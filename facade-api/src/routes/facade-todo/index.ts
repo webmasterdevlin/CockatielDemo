@@ -4,7 +4,7 @@ import { FastifyPluginAsync } from "fastify";
 
 import { circuitBreaker, retryWithBreaker } from "../../policies";
 
-const getAllTodoFacade: FastifyPluginAsync = async (
+const getTodoById: FastifyPluginAsync = async (
   fastify,
   opts
 ): Promise<void> => {
@@ -33,12 +33,12 @@ const getAllTodoFacade: FastifyPluginAsync = async (
       const { data } = await retryWithBreaker.execute(async (context: any) => {
         console.log(`--> Retry Attempt ${context.attempt}`);
         return await axios.get(
-          `http://127.0.0.1:5006/api/todos/${request.params.id}`
+          `http://127.0.0.1:5006/api/todo/${request.params.id}`
         );
       });
       if (data) {
         console.log("--> FacadeApi RECEIVED a SUCCESS");
-        return reply.code(200).send(data);
+        return reply.send(data);
       } else {
         console.log("--> FacadeApi RECEIVED a FAILURE");
         return reply.serviceUnavailable();
@@ -47,4 +47,4 @@ const getAllTodoFacade: FastifyPluginAsync = async (
   );
 };
 
-export default getAllTodoFacade;
+export default getTodoById;
