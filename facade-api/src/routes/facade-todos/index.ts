@@ -33,7 +33,7 @@ const getTodoById: FastifyPluginAsync = async (
       const { data } = await retryWithBreaker.execute(async (context: any) => {
         console.log(`--> Retry Attempt ${context.attempt}`);
         return await axios.get(
-          `http://127.0.0.1:5006/api/todo/${request.params.id}`
+          `http://127.0.0.1:5006/api/todos/${request.params.id}`
         );
       });
       if (data) {
